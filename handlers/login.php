@@ -7,6 +7,10 @@
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../classes/Auth.php';
+
+// Initialize Auth object
+$auth = new Auth();
 
 // Redirect if already authenticated
 if (isAuthenticated()) {

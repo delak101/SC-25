@@ -1,0 +1,688 @@
+{
+  "info": {
+    "name": "Silent Connect API v1.0",
+    "description": "Complete API collection for Silent Connect Medical Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/finalfinalfinal/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "1. Basic Endpoints",
+      "item": [
+        {
+          "name": "API Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}",
+              "host": ["{{baseUrl}}"]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Documentation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/docs",
+              "host": ["{{baseUrl}}"],
+              "path": ["docs"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (responseCode.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.data && response.data.token) {",
+                  "        pm.collectionVariables.set('authToken', response.data.token);",
+                  "        console.log('Token saved:', response.data.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\",\n  \"remember\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register (JSON - uses default logo.png)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (responseCode.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.data && response.data.user) {",
+                  "        console.log('Registration successful. User can now login immediately.');",
+                  "        console.log('User ID:', response.data.user.id);",
+                  "        console.log('User Status:', response.data.user.status);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"confirm_password\": \"password123\",\n  \"phone\": \"01234567890\",\n  \"national_id\": \"12345678901234\",\n  \"gender\": \"male\",\n  \"hearing_status\": \"deaf\",\n  \"governorate\": \"cairo\",\n  \"age\": 25,\n  \"terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register (Form-data with file uploads)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Test User 2",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "test2@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "confirm_password",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "01234567891",
+                  "type": "text"
+                },
+                {
+                  "key": "national_id",
+                  "value": "12345678901235",
+                  "type": "text"
+                },
+                {
+                  "key": "gender",
+                  "value": "female",
+                  "type": "text"
+                },
+                {
+                  "key": "hearing_status",
+                  "value": "hard_of_hearing",
+                  "type": "text"
+                },
+                {
+                  "key": "governorate",
+                  "value": "alexandria",
+                  "type": "text"
+                },
+                {
+                  "key": "age",
+                  "value": "30",
+                  "type": "text"
+                },
+                {
+                  "key": "terms",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "national_id_image",
+                  "description": "Select an image file for national ID (optional)",
+                  "type": "file"
+                },
+                {
+                  "key": "service_card_image",
+                  "description": "Select an image file for service card (optional)",
+                  "type": "file"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Pharmacy",
+      "item": [
+        {
+          "name": "Get Prescriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pharmacy?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["pharmacy"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Prescription by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pharmacy/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["pharmacy", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_id\": 1,\n  \"patient_id\": 2,\n  \"description\": \"Take 1 tablet twice daily after meals\",\n  \"notes\": \"Monitor for side effects\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pharmacy",
+              "host": ["{{baseUrl}}"],
+              "path": ["pharmacy"]
+            }
+          }
+        },
+        {
+          "name": "Update Prescription",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated prescription: Take 2 tablets three times daily\",\n  \"notes\": \"Updated notes\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pharmacy/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["pharmacy", "1"]
+            }
+          }
+        },
+        {
+          "name": "Search Prescriptions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_id\": 1,\n  \"date_from\": \"2025-01-01\",\n  \"date_to\": \"2025-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pharmacy/search",
+              "host": ["{{baseUrl}}"],
+              "path": ["pharmacy", "search"]
+            }
+          }
+        },
+        {
+          "name": "Delete Prescription",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pharmacy/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["pharmacy", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Users",
+      "item": [
+        {
+          "name": "Get Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"admin\",\n  \"role\": \"admin\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/search",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "search"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Videos",
+      "item": [
+        {
+          "name": "Get Videos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/videos?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["videos"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Video by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/videos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["videos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Video",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Medical Sign Language Tutorial\",\n  \"description\": \"Learn basic medical terminology in sign language\",\n  \"video_url\": \"https://example.com/video.mp4\",\n  \"category\": \"education\",\n  \"target_audience\": \"all\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/videos",
+              "host": ["{{baseUrl}}"],
+              "path": ["videos"]
+            }
+          }
+        },
+        {
+          "name": "Search Videos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"sign language\",\n  \"category\": \"education\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/videos/search",
+              "host": ["{{baseUrl}}"],
+              "path": ["videos", "search"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Clinics",
+      "item": [
+        {
+          "name": "Get Clinics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clinics?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["clinics"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Clinic by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clinics/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["clinics", "1"]
+            }
+          }
+        },
+        {
+          "name": "Search Clinics",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"cardiology\",\n  \"specialty\": \"cardiology\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clinics/search",
+              "host": ["{{baseUrl}}"],
+              "path": ["clinics", "search"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Error Testing",
+      "item": [
+        {
+          "name": "Unauthorized Request",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Invalid Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/invalid",
+              "host": ["{{baseUrl}}"],
+              "path": ["invalid"]
+            }
+          }
+        },
+        {
+          "name": "Invalid JSON",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "invalid json"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Missing Fields",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

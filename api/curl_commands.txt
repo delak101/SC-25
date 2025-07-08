@@ -1,0 +1,273 @@
+Silent Connect API v1.0 - cURL Test Commands
+============================================
+
+Base URL: http://localhost:5000/finalfinalfinal/api/v1
+
+IMPORTANT: Replace "YOUR_TOKEN_HERE" with actual token from login response
+
+===========================================
+1. BASIC ENDPOINTS (No Authentication)
+===========================================
+
+# API Info
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1" -H "Content-Type: application/json"
+
+# Health Check
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/health" -H "Content-Type: application/json"
+
+# Documentation
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/docs" -H "Content-Type: application/json"
+
+===========================================
+2. AUTHENTICATION
+===========================================
+
+# Login
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@example.com", "password": "password123", "remember": false}'
+
+# Register (without file uploads - uses default logo.png, users can login immediately)
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123",
+    "confirm_password": "password123",
+    "phone": "01234567890",
+    "national_id": "12345678901234",
+    "gender": "male",
+    "hearing_status": "deaf",
+    "governorate": "cairo",
+    "age": 25,
+    "terms": true
+  }'
+
+# Register with file uploads (example)
+# curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/auth/register" \
+#   -F "name=Test User 2" \
+#   -F "email=test2@example.com" \
+#   -F "password=password123" \
+#   -F "confirm_password=password123" \
+#   -F "phone=01234567891" \
+#   -F "national_id=12345678901235" \
+#   -F "gender=female" \
+#   -F "hearing_status=hard_of_hearing" \
+#   -F "governorate=alexandria" \
+#   -F "age=30" \
+#   -F "terms=true" \
+#   -F "national_id_image=@path/to/national_id.jpg" \
+#   -F "service_card_image=@path/to/service_card.jpg"
+
+# Get Profile (requires token)
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/auth/profile" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Verify Token
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/auth/verify" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+===========================================
+3. PHARMACY ENDPOINTS (Require Authentication)
+===========================================
+
+# Get All Prescriptions
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/pharmacy" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Get Prescription by ID
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/pharmacy/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Create Prescription
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/pharmacy" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "doctor_id": 1,
+    "patient_id": 2,
+    "description": "Take 1 tablet twice daily after meals",
+    "notes": "Monitor for side effects"
+  }'
+
+# Update Prescription
+curl -X PUT "http://localhost:5000/finalfinalfinal/api/v1/pharmacy/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "description": "Updated prescription: Take 2 tablets three times daily",
+    "notes": "Updated notes"
+  }'
+
+# Search Prescriptions
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/pharmacy/search" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "doctor_id": 1,
+    "date_from": "2025-01-01",
+    "date_to": "2025-12-31"
+  }'
+
+# Delete Prescription
+curl -X DELETE "http://localhost:5000/finalfinalfinal/api/v1/pharmacy/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+===========================================
+4. USERS ENDPOINTS (Require Authentication)
+===========================================
+
+# Get All Users
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/users" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Get User by ID
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/users/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Search Users
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/users/search" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "query": "admin",
+    "role": "admin",
+    "status": "active"
+  }'
+
+===========================================
+5. VIDEOS ENDPOINTS (Require Authentication)
+===========================================
+
+# Get All Videos
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/videos" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Get Video by ID
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/videos/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Create Video
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/videos" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "title": "Medical Sign Language Tutorial",
+    "description": "Learn basic medical terminology in sign language",
+    "video_url": "https://example.com/video.mp4",
+    "category": "education",
+    "target_audience": "all"
+  }'
+
+# Search Videos
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/videos/search" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "query": "sign language",
+    "category": "education"
+  }'
+
+===========================================
+6. CLINICS ENDPOINTS (Require Authentication)
+===========================================
+
+# Get All Clinics
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/clinics" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Get Clinic by ID
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/clinics/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Search Clinics
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/clinics/search" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "query": "cardiology",
+    "specialty": "cardiology"
+  }'
+
+===========================================
+7. ERROR TESTING
+===========================================
+
+# Test without authentication (should return 401)
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/users" \
+  -H "Content-Type: application/json"
+
+# Test invalid endpoint (should return 404)
+curl -X GET "http://localhost:5000/finalfinalfinal/api/v1/invalid" \
+  -H "Content-Type: application/json"
+
+# Test invalid JSON (should return 400)
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d 'invalid json'
+
+# Test missing fields (should return 422)
+curl -X POST "http://localhost:5000/finalfinalfinal/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{}'
+
+===========================================
+USAGE INSTRUCTIONS:
+===========================================
+
+1. Start by testing the basic endpoints (no auth required):
+   - API Info, Health Check, Documentation
+
+2. Test authentication:
+   - Try login with dummy credentials (will likely fail)
+   - Test missing fields validation
+
+3. For protected endpoints:
+   - First obtain a valid token through login
+   - Replace "YOUR_TOKEN_HERE" with the actual token
+   - Test various CRUD operations
+
+4. Test error scenarios:
+   - Invalid endpoints
+   - Missing authentication
+   - Invalid JSON
+   - Missing required fields
+
+===========================================
+EXPECTED RESPONSE FORMAT:
+===========================================
+
+Success Response:
+{
+  "success": true,
+  "status": 200,
+  "message": "Success message",
+  "data": { ... },
+  "timestamp": "2025-07-05T10:30:00+00:00",
+  "version": "1.0"
+}
+
+Error Response:
+{
+  "success": false,
+  "status": 400,
+  "error": {
+    "message": "Error message",
+    "code": 400,
+    "details": { ... }
+  },
+  "timestamp": "2025-07-05T10:30:00+00:00",
+  "version": "1.0"
+}
